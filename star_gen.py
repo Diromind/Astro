@@ -3,6 +3,7 @@ import math
 import random as r
 import os
 import struct
+import csv
 
 global sss
 sss = {'d': 0, 'f': 0, 'c': 0}  # переменная хранит сколько звдезд каждого типа было сгенерировано
@@ -27,7 +28,7 @@ class Star:
 
 class Generator:
     def __init__(self):
-        self.path = os.path.dirname(os.path.abspath(__file__)) + "\\"
+        self.path = ""
         self.stars = []
         # задаем константы
         self.pc = 3.085677581 * 10 ** 16  # m
@@ -134,7 +135,7 @@ class Generator:
         return 10 * p
 
     def create_realisitc_set_of_stars(self, filename):
-        def fill_thin_cylinder(level, file_stars):
+        def fill_thin_cylinder(level, file_stars, csv_writer=None, filetype="txt"):
             # conc = self.einasto_distibution(level / 1000, 'all')
             disk_conc = self.einasto_distibution(level / 1000, 'disk')  # концентрации каждой популяции
             flat_conc = self.einasto_distibution(level / 1000, 'flat')
@@ -170,18 +171,27 @@ class Generator:
                         # h = self.short_num(h, 4)
                         # mass = self.short_num(mass, 4)
 
-                        temp.append(str(x) + ' ' + str(y) + ' ' + str(h) + ' ' + str(mass) + ' ' + str(star_type))
+                        if filetype == "txt":
+                            temp.append(str(x) + ' ' + str(y) + ' ' + str(h) + ' ' + str(mass) + ' ')
+                        else:
+                            data_to_print_in_csv = [x, y, h, mass]
+                            csv_writer.writerow(data_to_print_in_csv)
+
                         #print(x, y, h, mass, star_type, file=file_stars)
 
                         sum_mass += mass
                         cnt_local += 1
                         sss[star_type] += 1
-            print(*temp, sep='\n', file=file_stars)
+
+            if filetype == "txt":
+                print(*temp, sep='\n', file=file_stars)
             return cnt_local, sum_mass
 
         data_name = self.path + filename
 
         data = open(data_name, 'w')
+        writer = csv.writer(data)
+        writer.writerow(["X", "Y", "Y", "M"])
         cnt = 0
         # print('Creating of stars started')
         start_time = t.time()
@@ -190,7 +200,7 @@ class Generator:
         n = 390000  # высота цилиндра
 
         while height < n:
-            cntd, mass_of_partd = fill_thin_cylinder(height, data)
+            cntd, mass_of_partd = fill_thin_cylinder(height, data, csv_writer=writer, filetype="csv")
             mass_of_part += mass_of_partd
             cnt += cntd
             if height % 25 == 0:
@@ -200,6 +210,7 @@ class Generator:
             if height % 1000 == 0:
                 data.close()
                 data = open(data_name, 'a')
+                writer = csv.writer(data)
             if height % (n // 100) == 0:
                 mass_of_part = 0
         # print(sss['d'], sss['f'], sss['c'])
