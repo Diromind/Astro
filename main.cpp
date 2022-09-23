@@ -82,7 +82,6 @@ void get_lattice_shift(int dist_btw_rays, vector<vector<double>> &stars){
 }
 
 int main(){
-    // double dist_btw_rays = tan(0.2 * 1000000 / mks) * full_H;
 
 
 
@@ -95,10 +94,12 @@ int main(){
     get_lattice_shift(10,stars);
 
 
-    for (int i = 1024; i < 2000000; i = i * 3 / 2){
-        get_lattice_shift(i,stars);
-    }
+    for (int i = 1; i < 7; i = i++){
+        for (int j = 0; j < 10; j++){
+        get_lattice_shift(pow(10, i) + pow(10, i - 1) * j,stars);
+    }}
 
+    cerr << "В непосредственной близости от звезды прошло лучей: " << close_stars_counter;
 
     return 0;
 }

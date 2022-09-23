@@ -18,6 +18,7 @@ const double m0 = 1.989 * 1e+30; // масса солнца в кг
 const double mks = 206265806000.0;  // в одном радиане микросекунд
 const long long sec_in_day = 86400;
 const long long sec_in_year = 31536000;
+int close_stars_counter = 0; // счетчик прохода луча в неспоредственной близости от звезды
 
 
 

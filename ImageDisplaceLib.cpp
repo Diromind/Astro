@@ -41,6 +41,7 @@ std::pair<double, double> get_displace_of_ray_by_single_star(std::vector<double>
 
     if (distance < 1) {
         std::cerr << "WARNING: distance was less then 1 meter, it has been set to 100pc." << std::endl;
+        close_stars_counter++;
         std::cerr << "Ray and star were ";
         print(ray, false, true);
         print(star, true, true);
@@ -72,7 +73,7 @@ std::pair<double, double> get_full_displace(std::vector<std::vector<double>> &st
     return displace; // в метрах, на верхней плоскости
 }
 
-double get_correlation_of_values(std::vector<double> &v1, std::vector<double> &v2){
+double get_correlation_of_values(std::vector<double> &v1, std::vector<double> &v2){  // i dont use that anymore
     if (v1.size() != v2.size()) return 0;
 
     auto n = v1.size();
